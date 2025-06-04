@@ -75,7 +75,7 @@ class ModelArguments:
 
 @dataclass
 class TrainingArguments(transformers.TrainingArguments):
-    output_dir: str = "/fsx/home/jiuhai.chen/BLIP3o/siglip2_sana_model"
+    output_dir: str = "/fsx/home/jiuhai.chen/BLIP3o/"
     eval_strategy: str = "no"
     per_device_train_batch_size: int = 64
     optim: str = "adamw_torch"
@@ -329,7 +329,7 @@ class DiffusionDecoderPipeline(DiffusionDecoder):
             if hasattr(self.scheduler, "scale_model_input"):
                 latent_model_input = self.scheduler.scale_model_input(latent_model_input, t)
 
-            # breakpoint()
+           
 
             model_pred = self.transformer(
                 hidden_states=latent_model_input,
@@ -357,15 +357,17 @@ if __name__ == "__main__":
 
 
     list_data_dict = []
-    data_files = glob.glob(os.path.join('/fsx/home/jiuhai.chen/BLIP3o/', "*.tar"))
+    data_files = glob.glob(os.path.join('/your/data/folder/', "*.tar"))
+    
     train_dataset = load_dataset("webdataset", data_files=data_files, split="train", num_proc=128)    
     train_dataset = train_dataset.rename_column("jpg", "image")
     train_dataset = train_dataset.remove_columns(
         [col for col in train_dataset.column_names if col not in (["image"])]
     )
+    list_data_dict.append(train_dataset)
 
-    for _ in range(100000):
-        list_data_dict.append(train_dataset)
+    # for _ in range(100000):
+    #     list_data_dict.append(train_dataset)
 
 
     if len(list_data_dict) > 1:

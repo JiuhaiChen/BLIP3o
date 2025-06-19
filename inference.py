@@ -52,7 +52,7 @@ multi_model.model.gen_vision_tower.to(f'cuda:{device_1}')
 
 pipe = DiffusionPipeline.from_pretrained(
    diffusion_path,
-   custom_pipeline="pipeline_emu2_gen",
+   custom_pipeline="pipeline_reconstruct",
    torch_dtype=torch.bfloat16,
    use_safetensors=True,
    variant="bf16",

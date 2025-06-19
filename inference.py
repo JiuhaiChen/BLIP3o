@@ -105,7 +105,18 @@ def set_global_seed(seed=42):
 
 
 
-image = Image.open('dog.jpg').convert('RGB') # input your image path here
-gen_img = pipe([image], guidance_scale=3.0)
+image = Image.open('cat.png').convert('RGB') # input your image path here
+
+width, height = image.size
+
+# Calculate cropping box for center crop
+min_dim = min(width, height)
+left = (width - min_dim) // 2
+top = (height - min_dim) // 2
+right = left + min_dim
+bottom = top + min_dim
+square_image = image.crop((left, top, right, bottom))
+
+gen_img = pipe([square_image], guidance_scale=3.0)
 gen_img.image.save(f"reconstruct.png")
 

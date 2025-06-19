@@ -206,13 +206,13 @@ class blip3oQwenForInferenceLM(Qwen2_5_VLForConditionalGeneration, blip3oMetaFor
             image_prompt = image_prompt.type(dtype).to(device)
 
         if has_image and not has_text:
-            prompt = self.encode_images(image_prompt)
+            prompt = self.encode_image(image_prompt)
             # pdb.set_trace()
             if do_classifier_free_guidance:
                 key = "[NULL_IMAGE]"
                 if key not in negative_prompt:
                     negative_image = torch.zeros_like(image_prompt)
-                    negative_prompt[key] = self.encode_images(negative_image)
+                    negative_prompt[key] = self.encode_image(negative_image)
                 prompt = torch.cat([prompt, negative_prompt[key]], dim=0)
         else:
             prompt = self.generate_image(text=[text_prompt], image=image_prompt, tokenizer=tokenizer)

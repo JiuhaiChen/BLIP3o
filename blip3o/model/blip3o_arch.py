@@ -192,7 +192,7 @@ class blip3oMetaForCausalLM(ABC):
     def get_gen_vision_tower(self):
         return self.get_model().get_gen_vision_tower()
 
-    def encode_image(self, images):
+    def encode_image(self, images = None):
         # breakpoint()
         gen_vision_tower = self.get_gen_vision_tower()
         device = gen_vision_tower.device
@@ -200,18 +200,19 @@ class blip3oMetaForCausalLM(ABC):
         prompt_image_embeds = gen_vision_tower(images)
         if 'early' in self.get_gen_pooling():
             prompt_image_embeds = self.pool_img(prompt_image_embeds)
-        num_img, _, c = prompt_image_embeds.shape
-        # prompt_image_embeds = prompt_image_embeds.contiguous().view(-1, c)
+        # num_img, _, c = prompt_image_embeds.shape
+        prompt_image_embeds = prompt_image_embeds.squeeze(0).permute(1,2,0)
+        prompt_image_embeds = prompt_image_embeds.contiguous().view(-1, 1792).unsqueeze(0)
 
         # ------------- compute similarity -------
-        all_dist = 0
-        count = 0
-        for i in range(2, prompt_image_embeds.shape[1]-1):
-            diff = (prompt_image_embeds[:,i,:].unsqueeze(1) -  prompt_image_embeds[:,:i,:])
-            dist = torch.sqrt(diff.square().sum(-1)).min().item()
-            all_dist+=dist
-            count+=1
-        all_dist /= count
+        # all_dist = 0
+        # count = 0
+        # for i in range(2, prompt_image_embeds.shape[1]-1):
+        #     diff = (prompt_image_embeds[:,i,:].unsqueeze(1) -  prompt_image_embeds[:,:i,:])
+        #     dist = torch.sqrt(diff.square().sum(-1)).min().item()
+        #     all_dist+=dist
+        #     count+=1
+        # all_dist /= count
         # self.dist = all_dist
         # print(self.dist)
 

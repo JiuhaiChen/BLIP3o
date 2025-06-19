@@ -43,13 +43,16 @@ disable_torch_init()
 model_path = os.path.expanduser(model_path)
 model_name = get_model_name_from_path(model_path)
 tokenizer, multi_model, context_len = load_pretrained_model(model_path, None, model_name)
+multi_model.model.gen_vision_tower.vision_tower_pretrained = # path to EVA CLIP encoder
+multi_model.model.gen_vision_tower.load_model()
+multi_model.model.gen_vision_tower.to(f'cuda:{device_1}')
 
 
 
 
 pipe = DiffusionPipeline.from_pretrained(
    diffusion_path,
-   custom_pipeline="pipeline_llava_gen",
+   custom_pipeline="pipeline_emu2_gen",
    torch_dtype=torch.bfloat16,
    use_safetensors=True,
    variant="bf16",
@@ -102,21 +105,7 @@ def set_global_seed(seed=42):
 
 
 
-
-
-
-prompt = "A photo of cute cat"
-set_global_seed(seed=42)
-gen_images = []
-for i in range(4):
-    gen_img = pipe(add_template([f"Please generate image based on the following caption: {prompt}"]), guidance_scale=3.0)
-    gen_images.append(gen_img.image)
-print(f"finish {prompt}")
-
-
-
-grid_image = create_image_grid(gen_images, 2, 2)
-grid_image.save(f"{prompt[:100]}.png")
-
-
+image = Image.open('dog.jpg').convert('RGB') # input your image path here
+gen_img = pipe([image], guidance_scale=3.0)
+gen_img.image.save(f"reconstruct.png")
 

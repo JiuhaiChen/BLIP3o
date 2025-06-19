@@ -1,19 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# ===========================================================================================
-#
-#    Copyright (c) Beijing Academy of Artificial Intelligence (BAAI). All rights reserved.
-#
-#    Author        : Fan Zhang
-#    Email         : zhangfan@baai.ac.cn
-#    Institute     : Beijing Academy of Artificial Intelligence (BAAI)
-#    Create On     : 2023-12-19 10:45
-#    Last Modified : 2023-12-25 07:59
-#    File Name     : pipeline_emu2_gen.py
-#    Description   :
-#
-# ===========================================================================================
-
 from dataclasses import dataclass
 from typing import List, Optional
 

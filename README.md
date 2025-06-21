@@ -19,7 +19,7 @@ You can  download our checkpoint:
 python -c "from huggingface_hub import snapshot_download; print(snapshot_download(repo_id='BLIP3o/BLIP3o-Model', repo_type='model'))"
 ```
 
-and copy the file pipeline_emu2_gen.py to the /HF_model/checkpoint/path/ of the BLIP3o-Model. In the /HF_model/checkpoint/path/ folder you will see the diffusion-decoder folder. Copy pipeline_emu2_gen.py to the diffusion-decoder folder.
+and copy the file pipeline_reconstruct.py to the /HF_model/checkpoint/path/ of the BLIP3o-Model. In the /HF_model/checkpoint/path/ folder you will see the diffusion-decoder folder. Copy pipeline_reconstruct.py to the diffusion-decoder folder.
 
 Download the EVA-CLIP vision tower weights from here [EVA-CLIP](https://huggingface.co/jiuhai/eva_clip_vision_tower) Put the path to the EVA-CLIP encoder [here](https://github.com/JiuhaiChen/BLIP3o/blob/7bfef50bb660f41a8536352f2fdd6fa30b06c310/inference.py#L46) 
 

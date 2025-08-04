@@ -24,7 +24,7 @@ please download the vision encoder: [VQ-SigLIP2](https://huggingface.co/csuhan/T
 ```Shell
 huggingface-cli download csuhan/TA-Tok ta_tok.pth 
 ```
-And import vision encoder path to the script: [scripts/run.sh](https://github.com/JiuhaiChen/BLIP3o/blob/BLIP3o-NEXT/scripts/run.sh#L13)
+And import vision encoder full path to the script: [scripts/run.sh](https://github.com/JiuhaiChen/BLIP3o/blob/BLIP3o-NEXT/scripts/run.sh#L13)
 
 
 Please cd to trl for GRPO, we recommend to install a new enviroment since some version conflicts for torch if using blip3o-next environment . Also you need to install the dependency from  [setup.py](https://github.com/JiuhaiChen/BLIP3o/blob/BLIP3o-NEXT/setup.py), please follow below

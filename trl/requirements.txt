@@ -1,0 +1,17 @@
+torch==2.7.1
+accelerate>=1.4.0
+datasets>=3.0.0
+transformers==4.54.1
+common
+dual
+tight
+data
+prox
+paddle
+paddlepaddle==3.0
+paddleocr==3.1.0
+torchvision==0.22.1
+diffusers==0.34.0
+Levenshtein
+easydict
+liger-kernel==0.6.1

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-export HF_HOME=/fsx/sfr/data/jiuhai
+export HF_HOME=/your/hf/home/
 
-VISION_MODEL=/fsx/sfr/data/jiuhai/hub/models--csuhan--TA-Tok/snapshots/ac4dbb76a42d8b8bc92532b6fdb90c42e2d0a447/ta_tok.pth
+VISION_MODEL=/your/vqsiglip/path
 
 AR_BACKBONE=Qwen/Qwen3-0.6B
 DIFFUSION=Efficient-Large-Model/SANA1.5_1.6B_1024px_diffusers
@@ -17,7 +17,7 @@ echo "RUN_NAME: ${RUN_NAME}"
 LOCAL_DIR="models/${RUN_NAME}"
 
 
-/fsx/home/jiuhai.chen/envs/miniconda3/envs/blip3o-next/bin/torchrun \
+torchrun \
 --nproc_per_node=4 \
 --nnodes=1 \
 --master_port=29509 \

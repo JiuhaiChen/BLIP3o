@@ -64,18 +64,16 @@ def main():
     inference = TextToImageInference(config)
 
     prompts = [
-        'A surreal scene on a lunar-like surface, where a brown horse is standing on the back of an astronaut. The horse, which has a dark mane and tail, is equipped with a brown leather saddle and bridle. The astronaut is on their hands and knees on the grey, dusty ground, wearing a white spacesuit with a patch on the shoulder. The astronaut helmet has a dark, reflective visor. The background is the blackness of space, with the blue and white Earth visible in the distance.'
+        'A cute cat'
     ]   
 
     output_dir = "BLIP3o-NEXT"
     os.makedirs(output_dir, exist_ok=True)
 
     for idx, prompt in enumerate(prompts):
-        image_sana = inference.generate_image(prompt)  # your inference function
-
+        image_sana = inference.generate_image(prompt)
         save_path = os.path.join(output_dir, f"blip3o_next_{idx:02d}.png")
         image_sana.save(save_path)
-
         print(f"Saved: {save_path}")
 
 

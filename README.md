@@ -1,4 +1,4 @@
-# 🌌 BLIP3o-NEXT
+# BLIP3o-NEXT
 
 Introducing BLIP3o-NEXT, next version of unified multimodal building on top of BLIP3o. 
 

@@ -7,7 +7,7 @@ Introducing BLIP3o-NEXT, next version of unified multimodal building on top of B
   - **Pretraining Data:** [27 Million Detailed Captions](https://huggingface.co/datasets/BLIP3o/BLIP3o-Pretrain-Long-Caption), [5 Million Short Captions](https://huggingface.co/datasets/BLIP3o/BLIP3o-Pretrain-Short-Caption)
   - **Instruction Tuning Data:** [BLIP3o-60k](https://huggingface.co/datasets/BLIP3o/BLIP3o-60k), [ShareGPT-4o-Image](https://huggingface.co/datasets/FreedomIntelligence/ShareGPT-4o-Image)
   - **Model Weights:** [Pretrain](), [Instruction Tuned](), [GRPO-Geneval](), [GRPO-Text]()
-  - **Training Code** Pretrain, Instruction Tune, GRPO
+  - **Training Code:** Pretrain, Instruction Tune, GRPO
 
 
 

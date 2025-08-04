@@ -24,7 +24,3 @@ trainer = GRPOTrainer(
     train_dataset=train_dataset,
 )
 trainer.train()
-
-
-
-# CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7  accelerate launch     train_grpo.py

@@ -71,7 +71,7 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
 
     for idx, prompt in enumerate(prompts):
-        image_sana = inference.generate_image(prompt)  # your inference function
+        image_sana = inference.generate_image(prompt) 
 
         save_path = os.path.join(output_dir, f"blip3o_next_{idx:02d}.png")
         image_sana.save(save_path)

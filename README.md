@@ -3,6 +3,14 @@
 Introducing BLIP3o-NEXT, next version of unified multimodal building on top of BLIP3o. 
 
 
+- **Fully Open-Source:**
+  - **Pretraining Data:** [27 Million Detailed Captions](https://huggingface.co/datasets/BLIP3o/BLIP3o-Pretrain-Long-Caption), [5 Million Short Captions](https://huggingface.co/datasets/BLIP3o/BLIP3o-Pretrain-Short-Caption)
+  - **Instruction Tuning Data:** [60 k GPT-4o Distilled Instruction Tuning Data](https://huggingface.co/datasets/BLIP3o/BLIP3o-60k), [ShareGPT-4o](https://huggingface.co/datasets/FreedomIntelligence/ShareGPT-4o-Image)
+  - **Model Weights:** [Pretrain](), [Instruction Tuned](), [GRPO-Geneval](), [GRPO-Text]()
+  - **Training Code** Pretrain, Instruction Tune, GRPO
+
+
+
 Install package for pretraining and instruction tuning
 ```Shell
 conda create -n blip3o-next python=3.11 -y

@@ -20,7 +20,7 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-please download the Vision encoder: [VQ-SigLIP2](https://huggingface.co/csuhan/TA-Tok/blob/main/ta_tok.pth)
+please download the vision encoder: [VQ-SigLIP2](https://huggingface.co/csuhan/TA-Tok/blob/main/ta_tok.pth)
 ```Shell
 huggingface-cli download csuhan/TA-Tok ta_tok.pth 
 ```

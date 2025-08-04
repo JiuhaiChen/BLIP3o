@@ -1,22 +1,16 @@
 #!/bin/bash
-#SBATCH --job-name=sana15    # Job name
+#SBATCH --job-name=blip3o    # Job name
 #SBATCH --nodes=4                         # Number of nodes
 #SBATCH --gres=gpu:8                         # Number of GPUs per node
 #SBATCH --time=96:00:00                      # Time limit (hh:mm:ss)
-#SBATCH --output=/fsx/home/jiuhai.chen/Tar/log/%j.out         # Standard output log
-#SBATCH --error=/fsx/home/jiuhai.chen/Tar/log/%j.err          # Standard error log
-#SBATCH --partition=ml.p5en.48xlarge
-#SBATCH --account=xgen-mm
-#SBATCH --exclude=ip-10-3-20-53 
+
 
 
 conda  activate  your env
 
-export WANDB_API_KEY='d8075df78a873149bb390d22e6fc2c6de539e365'
-export HF_HOME=/fsx/sfr/data/jiuhai
-
-
-VISION_MODEL=/fsx/sfr/data/jiuhai/hub/models--csuhan--TA-Tok/snapshots/ac4dbb76a42d8b8bc92532b6fdb90c42e2d0a447/ta_tok.pth
+export WANDB_API_KEY='your wandb key'
+export HF_HOME=/your/hf/home/
+VISION_MODEL=/your/vqsiglip/path
 
 AR_BACKBONE=Your_Pretrain_CKPT
 DIFFUSION=Efficient-Large-Model/SANA1.5_1.6B_1024px_diffusers

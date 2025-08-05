@@ -10,7 +10,6 @@ conda  activate  your env
 
 export WANDB_API_KEY='your wandb key'
 export HF_HOME=/your/hf/home/
-VISION_MODEL=/your/vqsiglip/path
 
 
 AR_BACKBONE=Qwen/Qwen3-0.6B
@@ -36,7 +35,6 @@ srun torchrun --nproc_per_node=8  --nnodes=$SLURM_NNODES \
     --version "qwen_1_5" \
     --dataset_cls 'mix' \
     --dispatch_batches False \
-    --vision_tower ${VISION_MODEL} \
     --mm_vision_select_layer -2 \
     --mm_use_im_start_end True \
     --group_by_modality_length True \

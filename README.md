@@ -1,6 +1,13 @@
-# BLIP3o-NEXT (In preparation)
+# BLIP3o-NEXT 
 
 [Project Page](https://jiuhaichen.github.io/BLIP3o-NEXT.github.io/)
+
+
+<p align="center">
+<img src="figure/blip3o-next.jpg" width="256">
+</p>
+
+
 
 
 
@@ -17,6 +24,14 @@
   - **Instruction Tuning Data:** [BLIP3o-60k](https://huggingface.co/datasets/BLIP3o/BLIP3o-60k), [ShareGPT-4o-Image](https://huggingface.co/datasets/FreedomIntelligence/ShareGPT-4o-Image)
   - **Model Weights:** [Pretrain](https://huggingface.co/BLIP3o/BLIP3o-NEXT-Pretrain), [Instruction Tuning](https://huggingface.co/BLIP3o/BLIP3o-NEXT-SFT), [GRPO-Geneval](https://huggingface.co/BLIP3o/BLIP3o-NEXT-GRPO-Geneval), [GRPO-Text]()
   - **Training Code:** Pretrain, Instruction Tuning, GRPO
+
+
+🔥 Welcome to discuss with us if you have any questions.
+Discord: https://discord.gg/SsVYdV84bw
+or Wechat
+<p align="center">
+<img src="figure/wechat_2.jpg" width="256">
+</p>
 
 
 

@@ -1,7 +1,7 @@
+
 # BLIP3o-NEXT 
-[Project Page](https://jiuhaichen.github.io/BLIP3o-NEXT.github.io/)
 
-
+</tiny><a href="https://jiuhaichen.github.io/BLIP3o-NEXT.github.io/" style="font-weight: normal;">Project Page</a></tiny>
 
 
 <p align="center">

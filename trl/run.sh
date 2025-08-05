@@ -14,7 +14,7 @@ export WANDB_API_KEY='your_wandb_key'
 NODELIST=($(scontrol show hostnames $SLURM_JOB_NODELIST))
 
 srun --nodes=1 --ntasks=1  \
-  /fsx/home/jiuhai.chen/envs/miniconda3/envs/grpo/bin/accelerate launch \
+  accelerate launch \
     --config_file examples/accelerate_configs/deepspeed_zero1.yaml \
     --num_machines 1 \
     --num_processes 8 \

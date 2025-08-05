@@ -4,7 +4,7 @@
 
 
 <p align="center">
-<img src="figure/blip3o-next.jpg" width="256">
+<img src="figure/blip3o-next.png" width="256">
 </p>
 
 

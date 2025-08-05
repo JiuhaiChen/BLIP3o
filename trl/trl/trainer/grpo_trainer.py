@@ -1327,6 +1327,35 @@ class GRPOTrainer(Trainer):
         device = self.accelerator.device
         rewards_per_func = torch.zeros(len(prompts), len(self.reward_funcs), device=device)
 
+
+        # jpeg_data = []
+        # for _img in generated_images:
+        #     buffer = io.BytesIO()
+        #     _img.save(buffer, format="JPEG")
+        #     jpeg_data.append(buffer.getvalue())
+            
+        # data = {
+        #     "images": jpeg_data,
+        #     "meta_datas": [ {"tag": _inst["tag"], "include":json.loads(_inst["include"]), "prompt":_inst["prompt"]} for _inst in inputs],
+        #     "only_strict": False,
+        # }
+        # data_bytes = pickle.dumps(data)
+
+        # # Send the JPEG data in an HTTP POST request to the server
+        # url = "http://127.0.0.1:18085"
+        # response = requests.post(url, data=data_bytes)
+
+        # # Print the response from the server
+        # response_data = pickle.loads(response.content)
+        # print(prompts[0])
+        # # print(response_data)
+        # scores = response_data["scores"]
+        # # breakpoint()
+        # rewards_per_func[:, 0] = torch.tensor(scores, device=device)
+        # max_idx = torch.argmax(rewards_per_func[:, 0]).item()
+        # best_img = generated_images[max_idx]
+        # best_img.save("highest_reward_image_16.png")
+
         img_batch = []
         for img in generated_images:
             img_bgr = np.array(img)[:, :, ::-1]

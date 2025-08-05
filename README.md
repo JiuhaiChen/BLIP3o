@@ -1,10 +1,11 @@
 # BLIP3o-NEXT 
-
 [Project Page](https://jiuhaichen.github.io/BLIP3o-NEXT.github.io/)
 
 
+
+
 <p align="center">
-<img src="figure/blip3o_next.png" width="256">
+<img src="figure/blip3o_next.png" width="1342">
 </p>
 
 

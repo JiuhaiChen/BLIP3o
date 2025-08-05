@@ -8,6 +8,14 @@ from transformers import AutoConfig, AutoModel, Siglip2VisionConfig, Siglip2Visi
 from . import models
 from .utils import ScalingLayer
 
+from huggingface_hub import hf_hub_download
+
+ckpt_path = hf_hub_download(
+    repo_id="csuhan/TA-Tok",
+    filename="ta_tok.pth",
+    repo_type="model"     
+)
+
 
 class TextAlignedTokenizer(nn.Module):
     def __init__(
@@ -78,7 +86,7 @@ class TextAlignedTokenizer(nn.Module):
     
     @classmethod
     def from_checkpoint(cls, ckpt, load_teacher=True, **kwargs):
-        ckpt = torch.load(ckpt, map_location='cpu')
+        ckpt = torch.load(ckpt_path, map_location='cpu')
         ckpt_kwargs = ckpt["model"]["args"]
         model = cls(**kwargs, **ckpt_kwargs)
         sd = ckpt["model"]["sd"]

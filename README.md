@@ -1,5 +1,7 @@
 # BLIP3o-NEXT (In preparation)
 
+[Project Page](https://jiuhaichen.github.io/BLIP3o-NEXT.github.io/)
+
 Introducing BLIP3o-NEXT, next version of unified multimodal building on top of BLIP3o. 
 
 

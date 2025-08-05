@@ -25,6 +25,7 @@ please download the vision encoder: [VQ-SigLIP2](https://huggingface.co/csuhan/T
 huggingface-cli download csuhan/TA-Tok ta_tok.pth 
 ```
 And import vision encoder full path to the script: [scripts/run.sh](https://github.com/JiuhaiChen/BLIP3o/blob/BLIP3o-NEXT/scripts/run.sh#L13)
+Import slurm config and environment
 ```Shell
 sbatch  scrips/run.sh
 ```

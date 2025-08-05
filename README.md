@@ -2,10 +2,17 @@
 
 [Project Page](https://jiuhaichen.github.io/BLIP3o-NEXT.github.io/)
 
-Introducing BLIP3o-NEXT, next version of unified multimodal building on top of BLIP3o. 
 
 
-- **Fully Open-Source:**
+**AR + Diffusion Architecture**: Similar with BLIP3o, BLIP3o-NEXT generates intermediate features via the autoregressive model and then conditions on these features to generate images through the diffusion model.
+
+**Discrete Image Token Supervision**: We add discrete SigLIP-2 image token prediction as extra training supervision, jointly optimizing CrossEntropy and the diffusion objective. By having the AR model lay down a discrete "blueprint" and feeding their hidden representations into the diffusion model, we combine structural accuracy with high visual-fidelity image outputs.
+
+**RL with verified reward**: The introduction of discrete image tokens unlocks seamless compatibility with existing language-model RL framework. Using Group Relative Policy Optimization (GRPO), we train the BLIP3o-NEXT to improve prompt alignment and text rendering in image generation.
+
+
+
+ **Fully Open-Source:**
   - **Pretraining Data:** [27 Million Detailed Captions](https://huggingface.co/datasets/BLIP3o/BLIP3o-Pretrain-Long-Caption), [5 Million Short Captions](https://huggingface.co/datasets/BLIP3o/BLIP3o-Pretrain-Short-Caption)
   - **Instruction Tuning Data:** [BLIP3o-60k](https://huggingface.co/datasets/BLIP3o/BLIP3o-60k), [ShareGPT-4o-Image](https://huggingface.co/datasets/FreedomIntelligence/ShareGPT-4o-Image)
   - **Model Weights:** [Pretrain](https://huggingface.co/BLIP3o/BLIP3o-NEXT-Pretrain), [Instruction Tuning](https://huggingface.co/BLIP3o/BLIP3o-NEXT-SFT), [GRPO-Geneval](https://huggingface.co/BLIP3o/BLIP3o-NEXT-GRPO-Geneval), [GRPO-Text]()

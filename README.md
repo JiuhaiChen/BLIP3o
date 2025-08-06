@@ -51,6 +51,11 @@ Import slurm config and environment
 sbatch  scrips/run.sh
 ```
 
+For the inference, change the model path in inference.py and
+
+```Shell
+python inference.py
+```
 
 For GRPO, we recommend to install a new enviroment since some version conflicts for torch if using blip3o-next environment. Also you need to install the dependency from  [setup.py](https://github.com/JiuhaiChen/BLIP3o/blob/BLIP3o-NEXT/setup.py), please follow below
 

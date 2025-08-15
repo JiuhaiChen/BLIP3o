@@ -1,8 +1,6 @@
 #!/bin/bash
 
-export HF_HOME=/your/hf/home/
-
-VISION_MODEL=/your/vqsiglip/path
+export HF_HOME=/your/hf/home
 
 AR_BACKBONE=Qwen/Qwen3-0.6B
 DIFFUSION=Efficient-Large-Model/SANA1.5_1.6B_1024px_diffusers
@@ -31,7 +29,6 @@ blip3o/train/train.py \
 --version "qwen_1_5" \
 --dataset_cls 'mix' \
 --dispatch_batches False \
---vision_tower ${VISION_MODEL} \
 --mm_vision_select_layer -2 \
 --mm_use_im_start_end True \
 --group_by_modality_length True \

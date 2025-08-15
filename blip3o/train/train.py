@@ -160,7 +160,7 @@ def train():
     if tokenizer.unk_token is not None:
         tokenizer.pad_token = tokenizer.unk_token
 
-    if model_args.vision_tower is not None:
+    if model_args.vision_tower is None:
         model.get_model().initialize_vision_modules(model_args=model_args, fsdp=training_args.fsdp)
 
         vision_tower = model.get_vision_tower()

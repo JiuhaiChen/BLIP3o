@@ -174,10 +174,11 @@ class blip3oMetaForCausalLM(ABC):
             modalities = [modalities]
         
         # random scale for training, but scale 1 for understanding evaluation
-        if self.training:
-            pool_scale = random.choice(vision_tower.pool_scales)
-        else:
-            pool_scale = 1
+        # if self.training:
+        #     pool_scale = random.choice(vision_tower.pool_scales)
+        # else:
+        #     pool_scale = 1
+        pool_scale = 1
 
         if type(images) is list or images.ndim == 5:
             if type(images) is list:

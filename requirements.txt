@@ -16,5 +16,5 @@ transformers==4.51.3
 wandb
 easydict
 flash_attn==2.6.2
-diffusers
+diffusers==0.34.0
 tabulate

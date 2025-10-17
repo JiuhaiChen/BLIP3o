@@ -116,6 +116,66 @@ class blip3oQwenForInferenceLM(Qwen3ForCausalLM, blip3oMetaForCausalLM):
         samples = numpy_to_pil(samples)
         return samples
 
+    @torch.no_grad()
+    def diffusion_decode(
+        self,
+        pred_latent: torch.Tensor,
+        guidance_scale: float = 2.0,
+        generator: Optional[Union[torch.Generator, List[torch.Generator]]] = None,
+        num_inference_steps: int = 30,
+        num_images_per_prompt: int = 1,
+        return_tensor: bool = False,
+        enable_progress_bar: bool = False,
+    ):
+        device = next(self.parameters()).device
+        dtype = next(self.parameters()).dtype
+        
+        bsz = pred_latent.size(0)
+        latent_size = 32
+        latent_channels = self.model.sana.config.in_channels
+        
+        img_hidden_states_null = torch.zeros_like(pred_latent)
+        pred_latent_with_null = torch.cat([img_hidden_states_null, pred_latent], 0)
+        
+        latents = randn_tensor(
+            shape=(bsz * num_images_per_prompt, latent_channels, latent_size, latent_size),
+            generator=generator,
+            device=device,
+            dtype=torch.bfloat16,
+        )
+        
+        if isinstance(self.model.noise_scheduler, FlowMatchEulerDiscreteScheduler):
+            sigmas = np.linspace(1.0, 1 / num_inference_steps, num_inference_steps)
+            self.model.noise_scheduler.set_timesteps(num_inference_steps, sigmas=sigmas)
+        else:
+            self.model.noise_scheduler.set_timesteps(num_inference_steps)
+        
+        for t in tqdm(self.model.noise_scheduler.timesteps, desc="Sampling images", disable=not enable_progress_bar):
+            latent_model_input = torch.cat([latents] * 2)
+            latent_model_input = latent_model_input.to(pred_latent_with_null.dtype)
+            
+            if hasattr(self.model.noise_scheduler, "scale_model_input"):
+                latent_model_input = self.model.noise_scheduler.scale_model_input(latent_model_input, t)
+            
+            noise_pred = self.model.sana(
+                hidden_states=latent_model_input,
+                encoder_hidden_states=self.model.diffusion_connector(pred_latent_with_null),
+                timestep=t.unsqueeze(0).expand(latent_model_input.shape[0]).to(latents.device),
+                encoder_attention_mask=None
+            ).sample
+            
+            noise_pred_uncond, noise_pred = noise_pred.chunk(2)
+            noise_pred = noise_pred_uncond + guidance_scale * (noise_pred - noise_pred_uncond)
+            
+            latents = self.model.noise_scheduler.step(noise_pred, t, latents).prev_sample
+        
+        samples = self.decode_latents(
+            latents.to(self.model.sana_vae.dtype) if self.model.sana_vae is not None else latents, 
+            return_tensor=return_tensor
+        )
+        
+        return samples
+
 
 
     @torch.no_grad()
@@ -136,6 +196,7 @@ class blip3oQwenForInferenceLM(Qwen3ForCausalLM, blip3oMetaForCausalLM):
         num_images_per_prompt: int = 1,
         return_tensor=False,
         enable_progress_bar=False,
+        sana_bs: int = 16,
         **kwargs,
     ):
         position_ids = kwargs.pop("position_ids", None)
@@ -151,9 +212,11 @@ class blip3oQwenForInferenceLM(Qwen3ForCausalLM, blip3oMetaForCausalLM):
             top_k=top_k)
 
         # breakpoint()
+        gen_attention_mask = torch.cat([attention_mask, torch.ones(attention_mask.size(0), max_new_tokens, dtype=attention_mask.dtype, device=attention_mask.device)],dim=1)
         with torch.no_grad():
             outs = self.model(
                 input_ids = gen_ids, 
+                attention_mask = gen_attention_mask,
                 output_hidden_states = True,
                 return_dict = True,
             )
@@ -172,60 +235,30 @@ class blip3oQwenForInferenceLM(Qwen3ForCausalLM, blip3oMetaForCausalLM):
         pred_latent = torch.stack(selected_hidden_states, dim=0)
         
 
+        total_bs = pred_latent.size(0)
+        all_samples = []
+        
+        for i in range(0, total_bs, sana_bs):
+            end_idx = min(i + sana_bs, total_bs)
+            batch_pred_latent = pred_latent[i:end_idx]
+            
+            batch_samples = self.diffusion_decode(
+                pred_latent=batch_pred_latent,
+                guidance_scale=guidance_scale,
+                generator=generator,
+                num_inference_steps=num_inference_steps,
+                num_images_per_prompt=num_images_per_prompt,
+                return_tensor=return_tensor,
+                enable_progress_bar=enable_progress_bar,
+            )
+            
+            all_samples.extend(batch_samples if isinstance(batch_samples, list) else [batch_samples])
+        
 
-        img_hidden_states_null = torch.zeros_like(pred_latent)
-        pred_latent = torch.cat([img_hidden_states_null, pred_latent], 0)
-        ## sample images from here
-        device = next(self.parameters()).device
-        dtype = next(self.parameters()).dtype
-
-        bsz = len(pred_latent) // 2
-        # latent_size = self.config.input_size
-        latent_size = 32
-        latent_channels = self.model.sana.config.in_channels
-
-
-        latents = randn_tensor(
-            shape=(bsz * num_images_per_prompt, latent_channels, latent_size, latent_size),
-            generator=None,
-            device=device,
-            dtype=torch.bfloat16,
-        )
-
-        # set step values
-        if isinstance(self.model.noise_scheduler, FlowMatchEulerDiscreteScheduler):
-            sigmas = np.linspace(1.0, 1 / num_inference_steps, num_inference_steps)
-            self.model.noise_scheduler.set_timesteps(num_inference_steps, sigmas=sigmas)
+        if return_tensor and len(all_samples) > 0:
+            samples = torch.cat(all_samples, dim=0)
         else:
-            self.model.noise_scheduler.set_timesteps(num_inference_steps)
-
-        # pred_latent = torch.cat([pred_latent] * 2)
-        # Convert to float32 before saving
-        for t in tqdm(self.model.noise_scheduler.timesteps, desc="Sampling images", disable=not enable_progress_bar):
-
-            latent_model_input = torch.cat([latents] * 2)
-            latent_model_input = latent_model_input.to(pred_latent.dtype)
-
-            if hasattr(self.model.noise_scheduler.timesteps, "scale_model_input"):
-                latent_model_input = self.model.noise_scheduler.scale_model_input(latent_model_input, t)
-            # predict noise model_output
-            noise_pred = self.model.sana(
-                hidden_states=latent_model_input,
-                encoder_hidden_states=self.model.diffusion_connector(pred_latent),
-                timestep=t.unsqueeze(0).expand(latent_model_input.shape[0]).to(latents.device),
-                encoder_attention_mask=None
-            ).sample
-
-
-            noise_pred_uncond, noise_pred= noise_pred.chunk(2)
-
-            noise_pred = noise_pred_uncond + guidance_scale * (noise_pred - noise_pred_uncond)
-
-            # compute previous image: x_t -> x_t-1
-            latents = self.model.noise_scheduler.step(noise_pred, t, latents).prev_sample
-
-        samples = self.decode_latents(latents.to(self.model.sana_vae.dtype) if self.model.sana_vae is not None else latents, return_tensor=return_tensor)      
-
+            samples = all_samples
 
         return gen_ids, samples
 

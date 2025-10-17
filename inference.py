@@ -27,36 +27,35 @@ class TextToImageInference:
         self.model = blip3oQwenForInferenceLM.from_pretrained(self.config.model_path, torch_dtype=self.config.dtype).to(self.device)
         self.tokenizer = AutoTokenizer.from_pretrained(self.config.model_path)
 
-    def generate_image(self, prompt: str) -> Image.Image:
-
+    def generate_image(self, prompts) -> Image.Image:
         batch_messages = []
-
-
-        messages = [
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": f"Please generate image based on the following caption: {prompt}"}
-        ]
-        input_text = self.tokenizer.apply_chat_template(
-            messages,
-            tokenize=False,
-            add_generation_prompt=True)
-        input_text += f"<im_start><S{self.config.scale}>"
-        
-        batch_messages.append(input_text)
-
+        for prompt in prompts:
+            messages = [
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": f"Please generate image based on the following caption: {prompt}"}
+            ]
+            input_text = self.tokenizer.apply_chat_template(
+                messages,
+                tokenize=False,
+                add_generation_prompt=True)
+            input_text += f"<im_start><S{self.config.scale}>"
+            
+            batch_messages.append(input_text)
         # tokenize as a batch
         inputs = self.tokenizer(batch_messages, return_tensors="pt", padding=True, truncation=True, padding_side="left")
     
-        gen_ids, output_image = self.model.generate_images(
+        gen_ids, output_images = self.model.generate_images(
             inputs.input_ids.to(self.device),
             inputs.attention_mask.to(self.device),
             max_new_tokens=self.config.seq_len,
             do_sample=True,
             top_p=self.config.top_p,
-            top_k=self.config.top_k)
+            top_k=self.config.top_k,
+            sana_bs=16 # If OOM occurs during diffusion process, lower this value.
+            )
 
-        print(output_image)
-        return output_image[0]
+        print(output_images)
+        return output_images
 
 
 def main():
@@ -64,17 +63,18 @@ def main():
     inference = TextToImageInference(config)
 
     prompts = [
-        'A surreal scene on a lunar-like surface, where a brown horse is standing on the back of an astronaut. The horse, which has a dark mane and tail, is equipped with a brown leather saddle and bridle. The astronaut is on their hands and knees on the grey, dusty ground, wearing a white spacesuit with a patch on the shoulder. The astronaut helmet has a dark, reflective visor. The background is the blackness of space, with the blue and white Earth visible in the distance.'
+        'A surreal scene on a lunar-like surface, where a brown horse is standing on the back of an astronaut. The horse, which has a dark mane and tail, is equipped with a brown leather saddle and bridle. The astronaut is on their hands and knees on the grey, dusty ground, wearing a white spacesuit with a patch on the shoulder. The astronaut helmet has a dark, reflective visor. The background is the blackness of space, with the blue and white Earth visible in the distance.',
+        'A cute cat'
     ]   
 
     output_dir = "BLIP3o-NEXT"
     os.makedirs(output_dir, exist_ok=True)
 
-    for idx, prompt in enumerate(prompts):
-        image_sana = inference.generate_image(prompt) 
+    images = inference.generate_image(prompts) 
 
+    for idx, img in enumerate(images):
         save_path = os.path.join(output_dir, f"blip3o_next_{idx:02d}.png")
-        image_sana.save(save_path)
+        img.save(save_path)
 
         print(f"Saved: {save_path}")
 
